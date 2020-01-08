@@ -6,11 +6,11 @@
         <button class="danceButton" @click="moveForward">Next</button>
     </section>
     <section v-else-if="position < questions.length" class="questions">
-      <h3>{{ `Question ${position + 1} of ${questions.length}` }}</h3>
+      <h5>{{ `Question ${position + 1} of ${questions.length}` }}</h5>
       <form v-on:submit.prevent="moveForward">
-        <h4> {{ questions[position].text }} </h4>
-        <div v-for="(item, index) in questions[position].answers" class="answersWrapper">
-            <label :key="item" class="labelContainer">
+        <h2> {{ questions[position].text }} </h2>
+        <div v-for="(item, index) in questions[position].answers" class="answersWrapper" :key="index">
+            <label class="labelContainer">
                 {{ item }}
                 <input 
                     type="radio" 
@@ -29,13 +29,13 @@
     <section v-else class="endCard">
         <h1>All done</h1>
         <h2>Below are your results. Click Submit Results to perform a final action.</h2>
-         <section v-for="(item, index) in questions" class="reviewWrapper">
+         <section v-for="(item, index) in questions" class="reviewWrapper" :key="index">
             <h4>Q: {{questions[index].text}}</h4>
-            <h5>A: {{responses[index]}}</h5>
+            <p>A: {{responses[index]}}</p>
          </section>
         <button type="submit" class="jumpButton" @click="submitForm">Submit Results</button>
     </section>
-    
+    <div v-if="notification.visible" class="notificationCard" :class="notification.isError ? 'notificationError':'notificationOkay'"><h3>{{ notification.text }}</h3></div>
 </article>
 </template>
 
@@ -55,7 +55,12 @@ export default {
         },
         started: false,
         responses: Array(this.answers).fill(false),
-        isSelected: Boolean
+        isSelected: Boolean,
+        notification: {
+            text: '',
+            isError: false,
+            visible: false
+        }
     };
   },
   methods: {
@@ -76,21 +81,31 @@ export default {
     submitForm() {
         // Do something here once user is done 
         // can post to a url, api, or service
-        console.log(this.responses);
-        console.log('Submit function executed');
+        this.notificationSender('Successfully submitted form!', false);
         return;
     },
     validate() {
         this.isSelected = true;
+        this.notification.visible = false;
     },
     validation() {
         if (!this.responses[this.position]) {
             this.isSelected = false;
-            setTimeout(()=>{this.isSelected = true},1000);
+            this.notificationSender('You must select an option!', true);
+            setTimeout(()=>{this.isSelected = true},5000);
             return false;
         }
         this.isSelected = true;
         return true;
+    },
+    notificationSender(text, error) {
+        this.notification.text = text;
+        this.notification.isError = error;
+        this.notification.visible = true;
+        setTimeout(()=>{
+            this.notification.text = '';
+            this.notification.visible = false;
+        },5000);
     }
   }
 };
@@ -108,6 +123,7 @@ export default {
 }
 
 article {
+    position: static;
     width: 95vw;
     max-height: 75vh;
     overflow: auto;
@@ -206,22 +222,13 @@ button:hover {
     20% { transform: translateY(-2px) }
     30% { transform: translateY(-1px) }
     40% { transform: translateY(0px) }
-    50% { transform: translateY(-1px) }
-    60% { transform: translateY(-2px) }
-    70% { transform: translateY(-1px) }
-    80% { transform: translateY(0px) }
-    90% { transform: translateY(1px) }
-    100% { transform: translateY(0px) }
 }
 
 @keyframes shake {
-  10%, 90% { transform: translate3d(-1px, 0, 0) }
-  
-  20%, 80% { transform: translate3d(2px, 0, 0) }
-
-  30%, 50%, 70% { transform: translate3d(-4px, 0, 0) }
-
-  40%, 60% { transform: translate3d(4px, 0, 0) }
+  10%, 90% { transform: translate(-1px) }
+  20%, 80% { transform: translate(2px) }
+  30%, 50%, 70% { transform: translate(-4px) }
+  40%, 60% { transform: translate(4px) }
 }
 
 h1 {
@@ -249,6 +256,10 @@ h4 {
 h5 {
     font-size: .9rem;
     padding: 0;
+    margin: .5rem;
+}
+
+.reviewWrapper p {
     margin: .5rem;
 }
 
@@ -311,5 +322,42 @@ h5 {
     border-radius: 50%;
     background: white;
 }
+.notificationCard {
+    position: absolute;
+    top: -120px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    font-size: 1rem;
+    width: 100%;
+    padding: 10px;
+    min-height: 2rem;
+    max-height: 100px;
+    box-sizing: border-box;
+    border-bottom: 3px solid #4fc08d;
+    background-color: white;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    animation: slide 5s ease-in-out 1s 1;
+}
 
+@keyframes slide {
+    0% { top: -120px }
+    10% { top: 0px }
+    90% { top: 0px }
+    100% { top: -120px }
+}
+
+.notificationError {
+    border-color: red;
+}
+
+.notificationOkay {
+    border-color: #4fc08d;
+}
 </style>
