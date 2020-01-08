@@ -10,14 +10,18 @@
       <form v-on:submit.prevent="moveForward">
         <h4> {{ questions[position].text }} </h4>
         <div v-for="(item, index) in questions[position].answers" class="answersWrapper">
-            <input 
-                type="radio" 
-                v-bind:name="item" 
-                v-bind:value="item"
-                v-model="responses[position]"
-                @change="validate"
-            >
-                <p>{{ item }}</p>
+            <label :key="item" class="labelContainer">
+                {{ item }}
+                <input 
+                    type="radio" 
+                    v-bind:key="index"
+                    v-bind:name="item" 
+                    v-bind:value="item"
+                    v-model="responses[position]"
+                    @change="validate"
+                >
+                <span class="checkmark"></span>
+            </label>
         </div>
       <button class="questionsButton">Next</button>
       </form>
@@ -93,6 +97,9 @@ export default {
 </script>
 
 <style scoped>
+* {
+    color: #4f5959;
+}
 .answersWrapper {
     display: flex;
     flex-direction: row;
@@ -108,7 +115,7 @@ article {
     padding: 25px;
     box-sizing: border-box;
     border-radius: 10px;
-    background-color: #9c9c9c;
+    background-color: white;
     transition: border .5s linear;
 }
 
@@ -244,4 +251,65 @@ h5 {
     padding: 0;
     margin: .5rem;
 }
+
+.labelContainer {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 6px;
+    margin-top: 6px;
+    cursor: pointer;
+    font-size: 1.4rem;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.labelContainer input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 1.4rem;
+    width: 1.4rem;
+    background-color: #556f8a;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.labelContainer:hover input ~ .checkmark {
+    background-color: #34495e;
+}
+
+.labelContainer input:checked ~ .checkmark {
+    background-color: #4fc08d;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.labelContainer input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.labelContainer .checkmark:after {
+    top: px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: white;
+}
+
 </style>
