@@ -1,7 +1,38 @@
 <template>
-    <section>
-        <pre>{{ JSON.stringify(questions, null, 2) }}</pre>
+<article :class="isSelected ? '' : 'noInput'">
+    <section v-if="started === false" class="welcomeCard">
+        <h1>Welcome</h1>
+        <h4>Lets get started!</h4>
+        <button class="danceButton" @click="moveForward">Next</button>
     </section>
+    <section v-else-if="position < questions.length" class="questions">
+      <h3>{{ `Question ${position + 1} of ${questions.length}` }}</h3>
+      <form v-on:submit.prevent="moveForward">
+        <h4> {{ questions[position].text }} </h4>
+        <div v-for="(item, index) in questions[position].answers" class="answersWrapper">
+            <input 
+                type="radio" 
+                v-bind:name="item" 
+                v-bind:value="item"
+                v-model="responses[position]"
+                @change="validate"
+            >
+                <p>{{ item }}</p>
+        </div>
+      <button class="questionsButton">Next</button>
+      </form>
+    </section>
+    <section v-else class="endCard">
+        <h1>All done</h1>
+        <h2>Below are your results. Click Submit Results to perform a final action.</h2>
+         <section v-for="(item, index) in questions" class="reviewWrapper">
+            <h4>Q: {{questions[index].text}}</h4>
+            <h5>A: {{responses[index]}}</h5>
+         </section>
+        <button type="submit" class="jumpButton" @click="submitForm">Submit Results</button>
+    </section>
+    
+</article>
 </template>
 
 <script>
