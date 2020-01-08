@@ -329,11 +329,13 @@ h5 {
     right: 0;
     margin: 0 auto;
     font-size: 1rem;
-    width: 100%;
+    max-width: 400px;
     padding: 10px;
     min-height: 2rem;
     max-height: 100px;
     box-sizing: border-box;
+    border-left: 3px solid #4fc08d;
+    border-right: 3px solid #4fc08d;
     border-bottom: 3px solid #4fc08d;
     background-color: white;
     border-bottom-left-radius: 10px;
