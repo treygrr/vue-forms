@@ -1,9 +1,7 @@
 <template>
-<div>
-  <article>
+<main>
     <Quiz v-bind:questions="questions"/>
-  </article>
-</div>
+</main>
 </template>
 
 <script>
@@ -28,9 +26,13 @@ export default {
 body {
   padding: 0;
   margin: 0;
+  background-color: #465b70;
+}
+* {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-div {
+main {
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -40,11 +42,4 @@ div {
   align-items: center;
 }
 
-article {
-  width: 50vw;
-  height: 50vh;
-  max-height: 50vh;
-  overflow: scroll;
-  border: 1px solid #000;
-}
 </style>
