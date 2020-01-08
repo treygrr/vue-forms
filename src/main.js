@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Quiz from "./Quiz.vue";
+import Quiz from "./pages/home";
 import questions from "./questions";
 
 Vue.config.productionTip = false;
